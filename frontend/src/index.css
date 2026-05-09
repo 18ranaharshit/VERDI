@@ -1,0 +1,591 @@
+/* Performance: All design tokens, glass utilities, base styles - single CSS file, no runtime style computation */
+
+@import '@fontsource/dm-mono/400.css';
+@import '@fontsource/dm-mono/500.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== CSS Custom Properties (Design Tokens) ===== */
+
+:root {
+  /* Backgrounds - warm mint with depth */
+  --bg-primary: #ecfdf5;
+  --bg-secondary: #d1fae5;
+  --bg-tertiary: #a7f3d0;
+
+  /* Glass System */
+  --glass-bg: rgba(255, 255, 255, 0.68);
+  --glass-border: rgba(255, 255, 255, 0.85);
+  --glass-shadow: 0 8px 32px rgba(16, 185, 129, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  /* Text Hierarchy */
+  --text-primary: #022c22;
+  /* Emerald 950 - max contrast */
+  --text-secondary: #064e3b;
+  /* Emerald 900 */
+  --text-muted: #0f766e;
+  /* Teal 700 - legible muted text */
+
+  /* Accent - rich emerald */
+  --accent: #059669;
+  --accent-hover: #047857;
+  --accent-glow: rgba(5, 150, 105, 0.35);
+  --accent-subtle: rgba(5, 150, 105, 0.08);
+
+  /* Credits - warm amber */
+  --credit: #d97706;
+  --credit-hover: #b45309;
+  --credit-glow: rgba(217, 119, 6, 0.30);
+  --credit-subtle: rgba(217, 119, 6, 0.08);
+  --credit-border: rgba(217, 119, 6, 0.30);
+
+  /* Bike unlock */
+  --bike-gradient: linear-gradient(135deg, #06B6D4 0%, #059669 100%);
+  --bike-glow: rgba(6, 182, 212, 0.30);
+
+  /* Semantic */
+  --danger: #dc2626;
+  --warning: #d97706;
+  --info: #0891b2;
+
+  /* Transport Modes */
+  --mode-car: #ef4444;
+  --mode-motorcycle: #f97316;
+  --mode-bus: #eab308;
+  --mode-electric: #06b6d4;
+  --mode-cycling: #059669;
+  --mode-walking: #8b5cf6;
+
+  /* Planner route colors */
+  --route-car: #EF4444;
+  --route-moto: #F97316;
+  --route-bus: #EAB308;
+  --route-electric: #06B6D4;
+  --route-cycling: #10B981;
+  --route-walking: #8B5CF6;
+
+  /* Passport grade colors */
+  --grade-aplus: #10B981;
+  --grade-a: #34D399;
+  --grade-b: #06B6D4;
+  --grade-c: #F59E0B;
+  --grade-d: #EF4444;
+
+  /* Activity grid intensity levels */
+  --grid-empty: var(--bg-tertiary);
+  --grid-low: rgba(16, 185, 129, 0.25);
+  --grid-mid: rgba(16, 185, 129, 0.50);
+  --grid-high: rgba(16, 185, 129, 0.75);
+  --grid-max: rgba(16, 185, 129, 1.00);
+}
+
+.dark {
+  --bg-primary: #022c22;
+  --bg-secondary: #064e3b;
+  --bg-tertiary: #065f46;
+
+  --glass-bg: rgba(6, 78, 59, 0.55);
+  --glass-border: rgba(16, 185, 129, 0.18);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.40),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  --text-primary: #f8fafc;
+  /* Slate 50 - max contrast */
+  --text-secondary: #d1fae5;
+  /* Emerald 100 */
+  --text-muted: #6ee7b7;
+  /* Emerald 300 - legible muted text on dark */
+
+  --accent: #10b981;
+  --accent-hover: #34d399;
+  --accent-glow: rgba(16, 185, 129, 0.30);
+  --accent-subtle: rgba(16, 185, 129, 0.12);
+}
+
+/* ===== Base Styles ===== */
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    /* Layered gradient orbs - gives glass cards something to blur against */
+    background-image:
+      radial-gradient(ellipse 70% 60% at 15% 10%, rgba(5, 150, 105, 0.18) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 50% at 85% 80%, rgba(217, 119, 6, 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 75% 15%, rgba(139, 92, 246, 0.07) 0%, transparent 55%),
+      radial-gradient(ellipse 35% 35% at 10% 85%, rgba(5, 150, 105, 0.08) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+
+  .dark body {
+    background-image:
+      radial-gradient(ellipse 70% 60% at 15% 10%, rgba(16, 185, 129, 0.12) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 50% at 85% 80%, rgba(217, 119, 6, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 75% 15%, rgba(139, 92, 246, 0.05) 0%, transparent 55%),
+      radial-gradient(ellipse 35% 35% at 10% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 50%);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: -0.025em;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--accent-glow);
+    border-radius: 3px;
+  }
+}
+
+/* ===== Glassmorphism System ===== */
+
+@layer utilities {
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 1rem;
+  }
+
+  .glass-card-strong {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(40px) saturate(2);
+    -webkit-backdrop-filter: blur(40px) saturate(2);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(5, 150, 105, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    border-radius: 1.25rem;
+  }
+
+  .dark .glass-card-strong {
+    background: rgba(6, 78, 59, 0.70);
+    border-color: rgba(16, 185, 129, 0.25);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.40),
+      0 0 0 1px rgba(16, 185, 129, 0.10),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .glass-card-gold {
+    background: rgba(255, 251, 235, 0.70);
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid rgba(217, 119, 6, 0.25);
+    box-shadow:
+      0 8px 32px rgba(217, 119, 6, 0.10),
+      inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    border-radius: 1rem;
+  }
+
+  .dark .glass-card-gold {
+    background: rgba(120, 53, 15, 0.25);
+    border-color: rgba(217, 119, 6, 0.30);
+    box-shadow:
+      0 8px 32px rgba(217, 119, 6, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .glass-card-bike {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(5, 150, 105, 0.12) 100%);
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid rgba(6, 182, 212, 0.30);
+    box-shadow:
+      0 8px 32px rgba(6, 182, 212, 0.12),
+      0 0 0 1px rgba(5, 150, 105, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    border-radius: 1.25rem;
+  }
+
+  .voucher-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border: 2px dashed var(--credit-border);
+    border-radius: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+  }
+
+  /* Punched-hole effect on voucher edges */
+  .voucher-card::before,
+  .voucher-card::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .voucher-card::before {
+    left: -12px;
+  }
+
+  .voucher-card::after {
+    right: -12px;
+  }
+
+  .glass-button {
+    background: rgba(5, 150, 105, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(5, 150, 105, 0.30);
+    transition: all 0.2s ease;
+  }
+
+  .glass-button:hover {
+    background: rgba(5, 150, 105, 0.18);
+    border-color: rgba(5, 150, 105, 0.50);
+  }
+
+  .page-bg {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .skeleton-shimmer {
+    background: linear-gradient(90deg,
+        var(--bg-secondary) 25%,
+        var(--bg-tertiary) 50%,
+        var(--bg-secondary) 75%);
+    background-size: 400% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* Hide scrollbar utility */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .route-card-selected {
+    border: 2px solid var(--accent);
+    background: var(--accent-subtle);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--accent-glow);
+  }
+
+  /* Passport shareable card - solid bg for html2canvas compatibility */
+  .passport-share-card {
+    background: linear-gradient(135deg, #071A0F 0%, #0D2618 50%, #163B25 100%);
+    border: 1px solid rgba(16, 185, 129, 0.30);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    width: 640px;
+    min-height: 320px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .passport-share-card * {
+    color: #E8F5EE !important;
+  }
+
+  .passport-share-card .accent-text {
+    color: #10B981 !important;
+  }
+
+  .passport-share-card .amber-text {
+    color: #F59E0B !important;
+  }
+
+  /* Activity grid cell animation */
+  .grid-cell {
+    animation: fadeIn 0.3s ease both;
+  }
+
+  /* Slider control (Safari fix) */
+  .range-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid white;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .range-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid white;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* ===== Keyframes ===== */
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  50% {
+    box-shadow: 0 0 25px var(--accent-glow), 0 0 50px var(--accent-glow);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes gradient-mesh {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes particle-rise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-100vh) scale(0.3);
+    opacity: 0;
+  }
+}
+
+@keyframes stroke-draw {
+  from {
+    stroke-dashoffset: 100;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== Reduced Motion ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .grid-cell {
+    animation: none !important;
+  }
+}
+
+/* ===== Leaflet Fixes ===== */
+
+.leaflet-container {
+  z-index: 1;
+  border-radius: 0.75rem;
+}
+
+/* ===== Recharts Custom ===== */
+
+.recharts-cartesian-axis-tick-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  fill: var(--text-muted);
+}
+
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+/* ===== Passport Share Card ===== */
+
+.passport-share-card {
+  background: linear-gradient(135deg, #022c22 0%, #064e3b 50%, #065f46 100%);
+  color: #ecfdf5;
+  padding: 1.75rem;
+  border-radius: 1rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.passport-share-card .accent-text {
+  color: #34d399;
+}
+
+.passport-share-card .amber-text {
+  color: #fbbf24;
+}
+
+/* ===== Range Slider ===== */
+
+.range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid var(--accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.range-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 2px 12px rgba(5, 150, 105, 0.4);
+}
+
+.range-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid var(--accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+/* ===== Route Card Selected ===== */
+
+.route-card-selected {
+  ring: 2px;
+  ring-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent), 0 4px 16px rgba(5, 150, 105, 0.15);
+}
+
+/* ===== Skeleton Shimmer ===== */
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg,
+      var(--glass-bg) 25%,
+      rgba(16, 185, 129, 0.08) 50%,
+      var(--glass-bg) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ===== Hide Scrollbar ===== */
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
